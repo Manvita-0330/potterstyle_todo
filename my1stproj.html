@@ -1,0 +1,181 @@
+jcsv
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Study Common Room</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{--bg:#0d1128;--bg2:#171d3f;--ink:#f3e9cf;--mute:#a9a3b8;--gold:#e9b949;--card:rgba(255,255,255,.07);--line:rgba(233,185,73,.3);--parch:#efe0b8;--parchink:#3b2a17;--acc:#a4262c;--glow:rgba(233,185,73,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f6ecd2;--bg2:#ead9ae;--ink:#2b1f12;--mute:#6f5d45;--gold:#9a6b0a;--card:rgba(255,255,255,.55);--line:rgba(120,80,10,.35);--glow:rgba(154,107,10,.25);color-scheme:light}}
+:root[data-theme="light"]{--bg:#f6ecd2;--bg2:#ead9ae;--ink:#2b1f12;--mute:#6f5d45;--gold:#9a6b0a;--card:rgba(255,255,255,.55);--line:rgba(120,80,10,.35);--glow:rgba(154,107,10,.25);color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,var(--bg2),var(--bg) 70%) fixed;color:var(--ink);font:19px/1.5 "Crimson Pro",Georgia,serif;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(1.5px 1.5px at 12% 20%,#fff,transparent),radial-gradient(1px 1px at 70% 12%,#fff,transparent),radial-gradient(1.5px 1.5px at 85% 60%,#fff,transparent),radial-gradient(1px 1px at 30% 75%,#fff,transparent),radial-gradient(1px 1px at 55% 40%,#fff,transparent),radial-gradient(1.5px 1.5px at 8% 88%,#fff,transparent);animation:tw 4s ease-in-out infinite alternate;opacity:.7}
+:root[data-theme="light"] body::before{opacity:0}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) body::before{opacity:0}}
+@keyframes tw{from{opacity:.25}to{opacity:.85}}
+.candles{position:fixed;top:0;left:0;right:0;height:140px;pointer-events:none;z-index:0}
+.candle{position:absolute;top:30px;width:10px;height:38px;border-radius:3px;background:linear-gradient(#f7f1de,#cdbf98);animation:bob 5s ease-in-out infinite}
+.candle::before{content:"";position:absolute;left:50%;top:-18px;width:10px;height:18px;margin-left:-5px;border-radius:50% 50% 50% 50%/70% 70% 30% 30%;background:radial-gradient(#fff6c0,#ffb02e 60%,transparent);box-shadow:0 0 22px 8px var(--glow);animation:fl .35s ease-in-out infinite alternate}
+@keyframes bob{50%{transform:translateY(10px)}}
+@keyframes fl{to{transform:scale(1.15,.9) rotate(3deg)}}
+main{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:22px 16px 80px}
+header{text-align:center;padding:70px 0 10px}
+h1{font:800 clamp(30px,6vw,52px)/1.1 Cinzel,Georgia,serif;margin:0;letter-spacing:.02em;background:linear-gradient(90deg,var(--gold),#fff4c9,var(--gold));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:200%}}
+.sub{color:var(--mute);font-style:italic;margin:6px 0 0}
+.bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin:18px 0}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:16px;color:var(--ink)}
+.chip b{color:var(--gold);font-family:Cinzel,serif}
+.houses{display:flex;gap:8px}
+.hb{width:34px;height:34px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;border:2px solid transparent;cursor:pointer;font-size:16px;color:#fff;transition:transform .2s}
+.hb:hover{transform:translateY(-3px) rotate(-6deg)}
+.hb[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 14px var(--glow)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tabs{display:flex;gap:6px;justify-content:center;margin:10px 0 22px;flex-wrap:wrap}
+.tab{font:600 15px Cinzel,serif;background:none;border:1px solid var(--line);color:var(--mute);padding:9px 18px;border-radius:8px 8px 2px 2px;transition:.2s}
+.tab[aria-selected="true"]{color:var(--bg);background:var(--gold);border-color:var(--gold);box-shadow:0 6px 18px var(--glow)}
+.panel{display:none;animation:rise .45s ease}
+.panel.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;backdrop-filter:blur(6px)}
+h2{font:600 20px Cinzel,serif;margin:0 0 12px;color:var(--gold)}
+.row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+input,textarea,select{font:inherit;color:var(--ink);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:8px;padding:9px 12px;min-width:0}
+:root[data-theme="light"] input,:root[data-theme="light"] textarea,:root[data-theme="light"] select{background:rgba(255,255,255,.7)}
+input[type=text],input:not([type]){flex:1}
+.btn{background:var(--acc);color:#fff;border:1px solid var(--gold);border-radius:8px;padding:9px 16px;font-weight:600;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--glow)}
+.ghost{background:none;border:none;color:var(--mute);font-size:20px;padding:0 6px}
+.ghost:hover{color:var(--acc)}
+ul{list-style:none;margin:0;padding:0}
+.task{display:flex;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px dashed var(--line);animation:rise .3s}
+.task input{width:22px;height:22px;accent-color:var(--gold);flex:none}
+.task span{flex:1}
+.task.done span{text-decoration:line-through;color:var(--mute)}
+.empty{color:var(--mute);font-style:italic;padding:10px 4px}
+.dl{display:flex;align-items:center;gap:14px;padding:12px;border-left:4px solid var(--gold);background:rgba(0,0,0,.15);border-radius:6px;margin-bottom:10px}
+.dl.soon{border-color:#e07a2f}.dl.late{border-color:#d33}
+.dl .n{font:800 26px Cinzel,serif;color:var(--gold);min-width:56px;text-align:center;line-height:1}
+.dl .n small{display:block;font:400 13px "Crimson Pro",serif;color:var(--mute)}
+.dl div.t{flex:1}
+.tag{display:inline-block;font-size:14px;color:var(--bg);background:var(--gold);padding:0 9px;border-radius:99px}
+.notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.note{background:var(--parch);color:var(--parchink);border-radius:4px 14px 4px 14px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.35);transform:rotate(var(--r,0deg));transition:transform .25s;position:relative}
+.note:hover{transform:rotate(0) scale(1.03)}
+.note h3{font:600 17px Cinzel,serif;margin:6px 0}
+.note p{margin:0;white-space:pre-wrap;font-size:17px}
+.note .ghost{position:absolute;right:6px;top:4px;color:#7a5d38}
+.note mark{background:#ffd966}
+.potion{text-align:center}
+.flask{width:90px;height:110px;margin:6px auto 10px;position:relative;border:3px solid var(--gold);border-radius:6px 6px 45px 45px;overflow:hidden}
+.flask i{position:absolute;left:0;right:0;bottom:0;height:var(--lvl,10%);background:linear-gradient(#8ef0b6,#2aa86a);transition:height 1s linear}
+.flask.run i::after{content:"";position:absolute;inset:-6px 0 auto;height:10px;background:radial-gradient(circle at 20% 60%,#fff8 3px,transparent 4px),radial-gradient(circle at 60% 40%,#fff8 4px,transparent 5px),radial-gradient(circle at 85% 70%,#fff8 3px,transparent 4px);animation:bub 1.2s linear infinite}
+@keyframes bub{to{transform:translateY(-16px);opacity:0}}
+.time{font:800 40px Cinzel,serif;color:var(--gold)}
+.pt{position:fixed;pointer-events:none;z-index:50;border-radius:50%;animation:pt .8s ease-out forwards}
+@keyframes pt{to{transform:translate(var(--x,0),var(--y,20px)) scale(.1);opacity:0}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,120px);background:var(--parch);color:var(--parchink);border:2px solid var(--gold);padding:10px 20px;border-radius:10px;z-index:60;transition:transform .4s cubic-bezier(.2,1.4,.4,1);max-width:90vw;text-align:center}
+.toast.on{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="candles" id="candles" aria-hidden="true"></div>
+<main>
+<header>
+<h1>The Study Common Room</h1>
+<p class="sub">Plan the day, catch every deadline, keep your class notes close.</p>
+</header>
+<div class="bar">
+<span class="chip">House points <b id="pts">0</b></span>
+<span class="chip">Rank <b id="rank">First Year</b></span>
+<span class="chip" id="hbox"><span class="houses" role="group" aria-label="Choose your house"></span></span>
+<button class="chip" id="lumos" aria-label="Toggle Lumos light mode">✨ Lumos / Nox</button>
+</div>
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" data-p="today" aria-selected="true">Daily Quests</button>
+<button class="tab" role="tab" data-p="dead" aria-selected="false">Deadlines</button>
+<button class="tab" role="tab" data-p="notes" aria-selected="false">Class Notes</button>
+</div>
+
+<section class="panel on" id="today"><div class="grid">
+<div class="box"><h2>Today’s quests</h2>
+<div class="row"><input id="tin" placeholder="Add a quest, like “Revise chemistry ch. 4”" aria-label="New task"><button class="btn" id="tadd">Add quest</button></div>
+<ul id="tl"></ul></div>
+<div class="box potion"><h2>Focus potion</h2>
+<div class="flask" id="flask"><i></i></div>
+<div class="time" id="tm">25:00</div>
+<div class="row" style="justify-content:center;margin-top:10px"><button class="btn" id="ts">Start brewing</button><button class="btn" id="tr" style="background:none">Reset</button></div>
+<p class="sub">Finish a 25-minute brew to earn 25 points.</p></div>
+</div></section>
+
+<section class="panel" id="dead"><div class="box"><h2>Upcoming submissions</h2>
+<div class="row"><input id="dt" placeholder="Assignment or exam" aria-label="Deadline title"><input id="ds" placeholder="Subject" aria-label="Subject" style="max-width:150px"><input type="date" id="dd" aria-label="Due date"><button class="btn" id="dadd">Add deadline</button></div>
+<div id="dl"></div></div></section>
+
+<section class="panel" id="notes"><div class="box"><h2>Class notebook</h2>
+<div class="row"><input id="ns" placeholder="Subject" aria-label="Note subject" style="max-width:160px"><input id="nt" placeholder="Lecture topic" aria-label="Note title"></div>
+<textarea id="nb" rows="4" style="width:100%;margin-bottom:10px" placeholder="Write what the professor says, and what you will need later…" aria-label="Note text"></textarea>
+<div class="row"><button class="btn" id="nadd">Save note</button><input id="nq" placeholder="Search your notes to revise" aria-label="Search notes"></div></div>
+<div class="notes" id="nl" style="margin-top:18px"></div></section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+var H={Gryffindor:["#a4262c","🦁"],Slytherin:["#1f6b4a","🐍"],Ravenclaw:["#2b4c8c","🦅"],Hufflepuff:["#c9951a","🦡"]};
+var RANKS=[[0,"First Year"],[60,"Prefect"],[150,"Head of House"],[300,"Headmaster"]];
+var S={house:"Gryffindor",tasks:[],dls:[],notes:[],pts:0};
+try{var raw=localStorage.getItem("scr1");if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
+function save(){try{localStorage.setItem("scr1",JSON.stringify(S))}catch(e){}}
+var $=function(i){return document.getElementById(i)};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var uid=function(){return Date.now()+Math.random()};
+var rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+var cd=$("candles");for(var i=0;i<9;i++){var c=document.createElement("div");c.className="candle";c.style.left=(6+i*11.5)+"%";c.style.top=(20+(i%3)*22)+"px";c.style.animationDelay=(i*.6)+"s";cd.appendChild(c)}
+function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(function(){t.classList.remove("on")},2600)}
+function spark(x,y,n,col){if(rm)return;for(var i=0;i<n;i++){var p=document.createElement("span"),s=4+Math.random()*6;p.className="pt";p.style.cssText="left:"+x+"px;top:"+y+"px;width:"+s+"px;height:"+s+"px;background:"+(col||["#ffd966","#fff","#ffb02e"][i%3])+";box-shadow:0 0 8px #ffd966;--x:"+((Math.random()-.5)*(n>3?200:30))+"px;--y:"+((Math.random()-.4)*(n>3?200:40))+"px";document.body.appendChild(p);setTimeout(function(q){q.remove()},850,p)}}
+var lt=0;addEventListener("pointermove",function(e){var n=Date.now();if(n-lt>40){lt=n;spark(e.clientX,e.clientY,1)}});
+function theme(m){document.documentElement.setAttribute("data-theme",m);try{localStorage.setItem("scrt",m)}catch(e){}}
+$("lumos").onclick=function(){var d=document.documentElement.getAttribute("data-theme");var dark=d?d==="dark":!matchMedia("(prefers-color-scheme:light)").matches;theme(dark?"light":"dark");toast(dark?"Lumos! The room is bright.":"Nox. Back to candlelight.")};
+try{var st=localStorage.getItem("scrt");if(st)theme(st)}catch(e){}
+function setHouse(h){S.house=h;document.documentElement.style.setProperty("--acc",H[h][0]);var b=document.querySelectorAll(".hb");for(var i=0;i<b.length;i++)b[i].setAttribute("aria-pressed",b[i].dataset.h===h)}
+var hw=document.querySelector(".houses");Object.keys(H).forEach(function(h){var b=document.createElement("button");b.className="hb";b.dataset.h=h;b.style.background=H[h][0];b.textContent=H[h][1];b.title=h;b.setAttribute("aria-label",h);b.onclick=function(e){setHouse(h);save();toast("Welcome to "+h+"!");spark(e.clientX,e.clientY,18)};hw.appendChild(b)});
+function addPts(n,e){var old=rank();S.pts+=n;var r=rank();$("pts").textContent=S.pts;$("rank").textContent=r;if(r!==old)toast("New rank: "+r+"! Well earned.");save()}
+function rank(){var r=RANKS[0][1];RANKS.forEach(function(x){if(S.pts>=x[0])r=x[1]});return r}
+function show(p){document.querySelectorAll(".panel").forEach(function(x){x.classList.toggle("on",x.id===p)});document.querySelectorAll(".tab").forEach(function(x){x.setAttribute("aria-selected",x.dataset.p===p)})}
+document.querySelectorAll(".tab").forEach(function(t){t.onclick=function(){show(t.dataset.p)}});
+function rT(){var l=$("tl");if(!S.tasks.length){l.innerHTML='<li class="empty">No quests yet. Add your first task for today.</li>';return}
+l.innerHTML=S.tasks.map(function(t){return'<li class="task'+(t.d?" done":"")+'"><input type="checkbox" data-id="'+t.id+'"'+(t.d?" checked":"")+' aria-label="Done"><span>'+esc(t.t)+'</span><button class="ghost" data-x="'+t.id+'" aria-label="Delete task">×</button></li>'}).join("")}
+$("tl").onclick=function(e){var id=e.target.dataset.id,x=e.target.dataset.x;if(id){var t=S.tasks.filter(function(z){return String(z.id)===id})[0];t.d=e.target.checked;if(t.d){addPts(10);spark(e.clientX,e.clientY,26);toast("+10 points for "+S.house+"!")}save();rT()}if(x){S.tasks=S.tasks.filter(function(z){return String(z.id)!==x});save();rT()}};
+function addT(){var v=$("tin").value.trim();if(!v)return;S.tasks.unshift({id:uid(),t:v,d:false});$("tin").value="";save();rT()}
+$("tadd").onclick=addT;$("tin").onkeydown=function(e){if(e.key==="Enter")addT()};
+function days(d){var a=new Date(d+"T00:00:00"),b=new Date();b.setHours(0,0,0,0);return Math.round((a-b)/864e5)}
+function rD(){var l=$("dl");if(!S.dls.length){l.innerHTML='<div class="empty">Nothing due yet. Add a submission and an owl will remind you in time.</div>';return}
+S.dls.sort(function(a,b){return a.due<b.due?-1:1});
+l.innerHTML=S.dls.map(function(x){var n=days(x.due),c=n<0?"late":n<=2?"soon":"",big=n<0?Math.abs(n):n,lab=n<0?"days late":n===0?"due today":"days left";return'<div class="dl '+c+'"><div class="n">'+(n===0?"Today":big)+'<small>'+(n===0?"":lab)+'</small></div><div class="t"><b>'+esc(x.t)+'</b><br>'+(x.s?'<span class="tag">'+esc(x.s)+'</span> ':"")+'<small>'+x.due+'</small></div><button class="ghost" data-x="'+x.id+'" aria-label="Done, remove deadline">✓</button></div>'}).join("")}
+$("dadd").onclick=function(e){var t=$("dt").value.trim(),d=$("dd").value;if(!t||!d){toast("Add a title and a due date first.");return}S.dls.push({id:uid(),t:t,s:$("ds").value.trim(),due:d});$("dt").value=$("ds").value="";save();rD();toast("Owl sent! Deadline saved.");spark(e.clientX,e.clientY,16)};
+$("dl").onclick=function(e){var x=e.target.dataset.x;if(x){S.dls=S.dls.filter(function(z){return String(z.id)!==x});addPts(20);save();rD();spark(e.clientX,e.clientY,26);toast("Submitted! +20 points.")}};
+function rN(){var q=$("nq").value.trim().toLowerCase(),l=$("nl"),a=S.notes.filter(function(n){return!q||(n.t+n.s+n.b).toLowerCase().indexOf(q)>-1});
+if(!a.length){l.innerHTML='<div class="empty">'+(S.notes.length?"No notes match your search.":"Your notebook is empty. Save your first class note above.")+"</div>";return}
+l.innerHTML=a.map(function(n,i){var b=esc(n.b);if(q){b=b.replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"),function(m){return"<mark>"+m+"</mark>"})}return'<article class="note" style="--r:'+((i%3-1)*.8)+'deg"><button class="ghost" data-x="'+n.id+'" aria-label="Delete note">×</button><span class="tag">'+esc(n.s||"General")+'</span><h3>'+esc(n.t||"Untitled")+'</h3><p>'+b+'</p></article>'}).join("")}
+$("nadd").onclick=function(e){var b=$("nb").value.trim();if(!b){toast("Write something in the note first.");return}S.notes.unshift({id:uid(),s:$("ns").value.trim(),t:$("nt").value.trim(),b:b});$("nb").value=$("nt").value="";addPts(5);save();rN();spark(e.clientX,e.clientY,16);toast("Note saved. +5 points.")};
+$("nq").oninput=rN;
+$("nl").onclick=function(e){var x=e.target.dataset.x;if(x){S.notes=S.notes.filter(function(z){return String(z.id)!==x});save();rN()}};
+var tot=1500,left=tot,iv=null;
+function fmt(){var m=Math.floor(left/60),s=left%60;$("tm").textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;document.querySelector("#flask i").style.setProperty("--lvl",(10+80*(1-left/tot))+"%")}
+$("ts").onclick=function(e){if(iv){clearInterval(iv);iv=null;$("flask").classList.remove("run");this.textContent="Resume brewing";return}
+$("flask").classList.add("run");this.textContent="Pause";iv=setInterval(function(){left--;fmt();if(left<=0){clearInterval(iv);iv=null;$("flask").classList.remove("run");$("ts").textContent="Start brewing";left=tot;addPts(25);toast("Potion complete! +25 points.");spark(innerWidth/2,innerHeight/2,40);fmt()}},1000)};
+$("tr").onclick=function(){clearInterval(iv);iv=null;left=tot;$("flask").classList.remove("run");$("ts").textContent="Start brewing";fmt()};
+setHouse(S.house);$("pts").textContent=S.pts;$("rank").textContent=rank();rT();rD();rN();fmt();
+})();
+</script>
+</body>
+</html>
